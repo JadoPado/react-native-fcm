@@ -36,17 +36,20 @@ public class MessagingService extends FirebaseMessagingService {
 
         if (imageUri != null) {
             Bitmap image = getBitmapfromUri(imageUri);
-            String message = remoteMessage.getData().get("message");
+			String title = remoteMessage.getData().get("title");
+            String body = remoteMessage.getData().get("body");
 
             intent.putExtra("image", true);
 
             PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
-            Notification.Style style = new Notification.BigPictureStyle().bigPicture(image).setSummaryText(message);
+            Notification.Style style = new Notification.BigPictureStyle().bigPicture(image);
 
             Notification.Builder notificationBuilder = new Notification.Builder(this)
                     .setSmallIcon(getSmallIcon())
                     .setLargeIcon(getLargeIcon())
+					.setContentTitle(title)
+					.setContentText(body)
                     .setStyle(style)
                     .setAutoCancel(true)
                     .setContentIntent(pendingIntent);
