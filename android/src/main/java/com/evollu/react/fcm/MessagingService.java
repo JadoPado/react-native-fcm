@@ -36,7 +36,7 @@ public class MessagingService extends FirebaseMessagingService {
 
         if (imageUri != null) {
             Bitmap image = getBitmapfromUri(imageUri);
-			String title = remoteMessage.getData().get("title");
+            String title = remoteMessage.getData().get("title");
             String body = remoteMessage.getData().get("body");
 
             intent.putExtra("image", true);
@@ -47,9 +47,10 @@ public class MessagingService extends FirebaseMessagingService {
 
             Notification.Builder notificationBuilder = new Notification.Builder(this)
                     .setSmallIcon(getSmallIcon())
+                    .setColor(getColor())
                     .setLargeIcon(getLargeIcon())
-					.setContentTitle(title)
-					.setContentText(body)
+                    .setContentTitle(title)
+                    .setContentText(body)
                     .setStyle(style)
                     .setAutoCancel(true)
                     .setContentIntent(pendingIntent);
@@ -77,6 +78,16 @@ public class MessagingService extends FirebaseMessagingService {
             e.printStackTrace();
 
             return null;
+        }
+    }
+
+    public int getColor() {
+        try {
+            ApplicationInfo applicationInfo = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
+
+            return applicationInfo.metaData.getInt("com.google.firebase.messaging.default_notification_color", 0);
+        } catch (NameNotFoundException e) {
+            return 0;
         }
     }
 
